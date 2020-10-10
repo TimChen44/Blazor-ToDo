@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDo.Client", "ToDo\Client\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDo.Shared", "ToDo\Shared\ToDo.Shared.csproj", "{57C42DF7-5E88-4728-8B27-7CBC0E437A9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDo.Entity", "ToDo.Entity\ToDo.Entity.csproj", "{16E19DCA-C72A-45E6-BA88-F9933786CCD8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDo.Entity", "ToDo.Entity\ToDo.Entity.csproj", "{ECB5D3D7-DEFC-4C3B-A00E-6DF895351526}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{57C42DF7-5E88-4728-8B27-7CBC0E437A9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57C42DF7-5E88-4728-8B27-7CBC0E437A9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57C42DF7-5E88-4728-8B27-7CBC0E437A9A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{16E19DCA-C72A-45E6-BA88-F9933786CCD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{16E19DCA-C72A-45E6-BA88-F9933786CCD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{16E19DCA-C72A-45E6-BA88-F9933786CCD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{16E19DCA-C72A-45E6-BA88-F9933786CCD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECB5D3D7-DEFC-4C3B-A00E-6DF895351526}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECB5D3D7-DEFC-4C3B-A00E-6DF895351526}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECB5D3D7-DEFC-4C3B-A00E-6DF895351526}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECB5D3D7-DEFC-4C3B-A00E-6DF895351526}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

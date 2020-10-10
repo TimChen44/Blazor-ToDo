@@ -4,10 +4,10 @@ using System.Text;
 
 namespace ToDo.Shared
 {
-   public  class SetFinishReq
+    public class SetImportantReq
     {
         public Guid TaskId { get; set; }
 
-        public bool IsFinish { get; set; }
+        public bool IsImportant { get; set; }
     }
 }

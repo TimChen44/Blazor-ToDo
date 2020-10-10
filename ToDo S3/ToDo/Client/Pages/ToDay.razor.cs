@@ -13,11 +13,10 @@ namespace ToDo.Client.Pages
 {
     public partial class ToDay
     {
-        [Inject]
-        public HttpClient Http { get; set; }
+        // 1、	列出当天的所有代办工作
 
         [Inject]
-        public MessageService MsgSrv { get; set; }
+        public HttpClient Http { get; set; }
 
         bool isLoading = true;
 
@@ -25,6 +24,7 @@ namespace ToDo.Client.Pages
 
         protected async override Task OnInitializedAsync()
         {
+            isLoading = true;
             taskDtos = await Http.GetFromJsonAsync<List<TaskDto>>("api/Task/GetToDayTask");
             isLoading = false;
             await base.OnInitializedAsync();
@@ -32,39 +32,48 @@ namespace ToDo.Client.Pages
 
         TaskDto newTask = new TaskDto() { PlanTime = DateTime.Now.Date };
 
+        //2、	添加代办
+
+        public MessageService MsgSrv { get; set; }
+
         bool isNewLoading = false;
 
         async void OnInsert(KeyboardEventArgs e)
         {
             if (e.Code == "Enter")
             {
+                if (string.IsNullOrWhiteSpace(newTask.Title))
+                {
+                    MsgSrv.Error($"标题必须填写");
+                    return;
+                }
                 isNewLoading = true;
-                var result = await Http.PostAsJsonAsync<TaskDto>("api/Task/SaveTask", newTask);
+                var result = await Http.PostAsJsonAsync<TaskDto>($"api/Task/SaveTask", newTask);
                 if (result.IsSuccessStatusCode)
                 {
                     newTask.TaskId = await result.Content.ReadFromJsonAsync<Guid>();
                     taskDtos.Add(newTask);
                     newTask = new TaskDto() { PlanTime = DateTime.Now.Date };
-                    MsgSrv.Success("添加成功");
                 }
                 else
                 {
-                    MsgSrv.Success($"添加失败{result.StatusCode}");
+                    MsgSrv.Error($"请求发生错误 {result.StatusCode}");
                 }
                 isNewLoading = false;
                 StateHasChanged();
             }
         }
 
+        //3、	编辑抽屉
         async void OnCardClick(TaskDto task)
         {
-            var options = new DrawerOptions()
+            var config = new DrawerOptions()
             {
                 Title = task.Title,
                 Width = 450,
             };
 
-            var drawerRef = await DrawerSvr.CreateAsync<TaskInfo, TaskDto, TaskDto>(options, task);
+            var drawerRef = await DrawerSvr.CreateAsync<TaskInfo, TaskDto, TaskDto>(config, task);
 
             drawerRef.OnClosed = async result =>
             {
@@ -75,25 +84,27 @@ namespace ToDo.Client.Pages
             };
         }
 
+        //4、	修改重要程度
         private async void OnStar(TaskDto task)
         {
-            SetStarReq req = new SetStarReq()
+            var req = new SetImportantReq()
             {
                 TaskId = task.TaskId,
-                IsStar = !task.IsImportant,
+                IsImportant = !task.IsImportant,
             };
 
-            var result = await Http.PostAsJsonAsync<SetStarReq>("api/Task/SetStar", req);
+            var result = await Http.PostAsJsonAsync<SetImportantReq>("api/Task/SetImportant", req);
             if (result.IsSuccessStatusCode)
             {
-                task.IsImportant = req.IsStar;
+                task.IsImportant = req.IsImportant;
                 StateHasChanged();
             }
         }
 
+        //5、	修改完成与否
         private async void OnFinish(TaskDto task)
         {
-            SetFinishReq req = new SetFinishReq()
+            var req = new SetFinishReq()
             {
                 TaskId = task.TaskId,
                 IsFinish = !task.IsFinish,
@@ -107,16 +118,12 @@ namespace ToDo.Client.Pages
             }
         }
 
+        //6、	删除代办
         public async Task OnDel(TaskDto task)
         {
             if (await ConfigSvr.Show($"是否删除任务 {task.Title}", "删除", ConfirmButtons.YesNo, ConfirmIcon.Info) == ConfirmResult.Yes)
             {
-                var result = await Http.DeleteAsync($"api/Task/DelTaskDto?taskId={task.TaskId}");
-                if (result.IsSuccessStatusCode)
-                {
-                    taskDtos.Remove(task);
-                    StateHasChanged();
-                }
+                taskDtos.Remove(task);
             }
         }
     }

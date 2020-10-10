@@ -14,7 +14,10 @@ namespace ToDo.Server
 {
     public class Startup
     {
-        public static readonly ILoggerFactory log = LoggerFactory.Create(b => { b.AddConsole(); });
+        /// <summary>
+        ///  ‰≥ˆ»’÷æ
+        /// </summary>
+        public static readonly ILoggerFactory loggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
         public Startup(IConfiguration configuration)
         {
@@ -27,15 +30,13 @@ namespace ToDo.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllersWithViews();
             services.AddRazorPages();
 
             services.AddDbContext<TodoContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")).UseLoggerFactory(log);
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")).UseLoggerFactory(loggerFactory);
             });
-            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

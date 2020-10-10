@@ -3,8 +3,7 @@
 @inject ConfirmService ConfigSvr
 
 <PageHeader Title="@("我的一天")" Subtitle="@DateTime.Now.ToString("yyyy年MM月dd日")"></PageHeader>
-
-<Spin Spinning="@isLoading">
+<Spin Spinning="isLoading">
     @foreach (var item in taskDtos)
     {
         <Card Bordered="true" Size="small" Class="task-card">
@@ -40,12 +39,14 @@
         </Card>
     }
 
-    <div class="task-input">
-        <DatePicker Picker="@DatePickerType.Date" @bind-Value="@newTask.PlanTime" />
-        <Input @bind-Value="@newTask.Title" OnkeyUp="OnInsert" />
-    </div>
-
+    <Spin Spinning="isNewLoading">
+        <div class="task-input">
+            <DatePicker Picker="@DatePickerType.Date" @bind-Value="@newTask.PlanTime" />
+            <Input @bind-Value="@newTask.Title" OnkeyUp="OnInsert" />
+        </div>
+    </Spin>
 </Spin>
+
 
 <style>
     .task-card {

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ToDo.Shared
 {
-    public class GetSearchRsp
+  public   class GetSearchRsp
     {
         public List<TaskDto> Data { get; set; }
 
