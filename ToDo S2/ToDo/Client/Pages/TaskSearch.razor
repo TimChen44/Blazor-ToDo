@@ -1,0 +1,50 @@
+﻿@page "/search"
+@inject TaskServices TaskSvr
+
+<PageHeader Title="@("全部待办事项")" Subtitle="@($"数量：{datas?.Count}")"></PageHeader>
+
+<Search @bind-Value="title" OnSearch="OnSearch"></Search>
+
+<Spin Spinning="@isLoading">
+    <Table DataSource="@datas">
+        <AntDesign.Column @bind-Field="@context.Title" Sortable>
+            @context.Title
+            @if (context.IsImportant)
+            {
+                <Tag Color="orange">重要</Tag>
+            }
+        </AntDesign.Column>
+        <AntDesign.Column @bind-Field="@context.Description" />
+        <AntDesign.Column @bind-Field="@context.PlanTime" Sortable/>
+        <AntDesign.Column @bind-Field="@context.Deadline" Sortable/>
+        <AntDesign.Column @bind-Field="@context.IsFinish">
+            @if (context.IsFinish)
+            {
+                <Icon Type="check" Theme="outline" />
+            }
+        </AntDesign.Column>
+    </Table>
+</Spin>
+
+@code {
+
+    private bool isLoading = false;
+
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await OnSearch();
+    }
+
+    private async Task OnSearch()
+    {
+        isLoading = true;
+        datas = await TaskSvr.LoadSearch(title);
+        isLoading = false;
+    }
+
+    private string title;
+
+    List<TaskDto> datas = new List<TaskDto>();
+
+}
