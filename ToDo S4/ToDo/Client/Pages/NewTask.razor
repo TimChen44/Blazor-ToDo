@@ -1,0 +1,22 @@
+﻿<Divider Text="新任务"></Divider>
+@if (newTask != null)
+{
+    <Spin Spinning="isNewLoading">
+        <div class="task-input">
+            <DatePicker Picker="@DatePickerType.Date" @bind-Value="@newTask.PlanTime" />
+            <Input @bind-Value="@newTask.Title" OnkeyUp="OnInsertKey" />
+            @if(ChildContent!=null )
+            {
+                @ChildContent(newTask)
+            }
+        </div>
+    </Spin>
+}
+<style>
+
+
+    .task-input {
+        display: flex;
+        flex-direction: row
+    }
+</style>
