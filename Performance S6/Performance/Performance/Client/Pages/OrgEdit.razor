@@ -1,0 +1,25 @@
+﻿@inherits DrawerTemplate<OrgEditParameter, OrgDto>
+
+<Spin Spinning="isLoading">
+    @if (model != null)
+    {
+        <Form OnFinish="OnSave" Model="@model" LabelCol="new ColLayoutParam() {Span = 6 }">
+            <FormItem Label="名称">
+                <Input @bind-Value="context.Name" />
+            </FormItem>
+            <FormItem Label="地址">
+                <Input @bind-Value="context.Address" />
+            </FormItem>
+            <FormItem Label="电话">
+                <Input @bind-Value="context.Phone" />
+            </FormItem>
+            <FormItem Label="描述">
+                <Input @bind-Value="context.Description" />
+            </FormItem>
+            <FormItem>
+                <Button Type="@ButtonType.Primary" HtmlType="submit">保存</Button>
+                <Button OnClick="OnCancel">取消</Button>
+            </FormItem>
+        </Form>
+    }
+</Spin>

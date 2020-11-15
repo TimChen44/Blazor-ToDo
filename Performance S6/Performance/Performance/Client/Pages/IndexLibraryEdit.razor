@@ -1,0 +1,39 @@
+﻿@inherits DrawerTemplate<Guid?, IndexLibraryDto>
+
+<Spin Spinning="isLoading">
+    @if (model != null)
+    {
+        <Form OnFinish="OnSave" Model="@model" LabelCol="new ColLayoutParam() {Span = 6 }">
+            <FormItem Label="指标名称">
+                <Input @bind-Value="context.Name" />
+            </FormItem>
+            <FormItem Label="指标范围">
+                <RadioGroup @bind-Value="context.Scope" ButtonStyle="solid">
+                    <Radio RadioButton Value='"通用"'>通用</Radio>
+                    <Radio RadioButton Value='"部门"'>部门</Radio>
+                    <Radio RadioButton Value='"公司"'>公司</Radio>
+                    <Radio RadioButton Value='"集团"'>集团</Radio>
+                </RadioGroup>
+            </FormItem>
+            <FormItem Label="指标类别">
+                <Input @bind-Value="context.Type" />
+            </FormItem>
+            <FormItem Label="单位">
+                <AutoComplete @bind-Value="@context.Unit" Options="@unitOptions"/>
+            </FormItem>
+            <FormItem Label="指标定义">
+                <TextArea @bind-Value="context.Definition" MinRows="3" />
+            </FormItem>
+            <FormItem Label="备注">
+                <TextArea @bind-Value="context.Remark" MinRows="3"/>
+            </FormItem>
+            <FormItem Label="是否启用">
+                <Switch @bind-Value="context.IsEnabled" />
+            </FormItem>
+            <FormItem>
+                <Button Type="@ButtonType.Primary" HtmlType="submit">保存</Button>
+                <Button OnClick="OnCancel">取消</Button>
+            </FormItem>
+        </Form>
+    }
+</Spin>

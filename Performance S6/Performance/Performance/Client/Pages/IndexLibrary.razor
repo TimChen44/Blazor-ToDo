@@ -1,0 +1,52 @@
+﻿@page "/IndexLibrary"
+
+<PageHeader Title="指标库" Subtitle="维护系统可用的指标">
+    <PageHeaderContent>
+        <Form Layout="@FormLayout.Inline" Model="queryDto">
+            <FormItem Label="指标名称">
+                <Input @bind-Value="context.Name" />
+            </FormItem>
+            <FormItem Label="指标范围">
+                <Select @bind-Value="@context.Scope" Style="width:120px">
+                    <SelectOption Value="">全部</SelectOption>
+                    <SelectOption Value="通用">通用</SelectOption>
+                    <SelectOption Value="部门">部门</SelectOption>
+                    <SelectOption Value="公司">公司</SelectOption>
+                    <SelectOption Value="集团">集团</SelectOption>
+                </Select>
+            </FormItem>
+            <FormItem Label="指标类别">
+                <Input @bind-Value="context.Type" />
+            </FormItem>
+            <FormItem Label="指标定义">
+                <Input @bind-Value="context.Definition" />
+            </FormItem>
+            <FormItem>
+                <Button Type="@ButtonType.Primary" OnClick="OnSearch">检索</Button>
+            </FormItem>
+        </Form>
+    </PageHeaderContent>
+    <PageHeaderExtra>
+        <Button Type="@ButtonType.Primary" OnClick="OnAdd">添加指标</Button>
+    </PageHeaderExtra>
+</PageHeader>
+
+<Table Loading="@isLoading" @ref="tableRef" DataSource="@datas" @bind-PageSize="@queryDto.PageSize" @bind-PageIndex="@queryDto.PageIndex" Total="@total" OnChange="OnChange" TItem="IndexLibraryDto">
+    <AntDesign.Column @bind-Field="@context.Name" Sortable />
+    <AntDesign.Column @bind-Field="@context.Scope" Sortable>
+        <Tag>@context.Scope</Tag>
+    </AntDesign.Column>
+    <AntDesign.Column @bind-Field="@context.Type" Sortable />
+    <AntDesign.Column @bind-Field="@context.Unit" />
+    <AntDesign.Column @bind-Field="@context.Definition" />
+    <AntDesign.Column @bind-Field="@context.Remark" />
+    <AntDesign.Column @bind-Field="@context.IsEnabled">
+        <Icon Type="@(context.IsEnabled? "check-circle":"close-circle")" Theme="outline" Style="@(context.IsEnabled? "color:green":"color:red")" />
+    </AntDesign.Column>
+
+    <AntDesign.Column TData="object" Style="width:225px">
+        <Button OnClick="x=>OnEdit(context)">编辑</Button>
+        <Button OnClick="x=>OnDelete(context)" Danger>删除</Button>
+        <Button OnClick="x=>OnChart(context)">分析</Button>
+    </AntDesign.Column>
+</Table>

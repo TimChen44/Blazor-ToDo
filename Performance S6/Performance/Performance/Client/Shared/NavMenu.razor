@@ -1,0 +1,39 @@
+﻿
+<Menu Mode=MenuMode.Horizontal>
+    <MenuItem RouterLink="/IndexLibrary" RouterMatch="NavLinkMatch.Prefix">
+        <Icon Type="read" Theme="outline"></Icon>
+        指标库维护
+    </MenuItem>
+    <MenuItem RouterLink="/Org" RouterMatch="NavLinkMatch.Prefix">
+        <Icon Type="partition" Theme="outline"></Icon>
+        部门维护
+    </MenuItem>
+    <MenuItem RouterLink="/Achievement" RouterMatch="NavLinkMatch.Prefix">
+        <Icon Type="stock" Theme="outline"></Icon>
+        指标数据维护
+    </MenuItem>
+    <AuthorizeView Policy="Admin">
+        <Authorized>
+            <MenuItem>
+                <Icon Type="logout"></Icon>设置
+            </MenuItem>
+        </Authorized>
+    </AuthorizeView>
+    <AuthorizeView>
+        <Authorized>
+            <MenuItem Style="float: right;" OnClick="OnOutLogin">
+                <Icon Type="logout"></Icon>注销
+            </MenuItem>
+            <MenuItem Style="float: right;" OnClick="OnLogin">
+                <Icon Type="user"></Icon>
+                @UserName
+            </MenuItem>
+        </Authorized>
+        <NotAuthorized>
+            <MenuItem Style="float: right;" OnClick="OnLogin">
+                <Icon Type="login" Theme="outline"></Icon>登录
+            </MenuItem>
+        </NotAuthorized>
+    </AuthorizeView>
+</Menu>
+

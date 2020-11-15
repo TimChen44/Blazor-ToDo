@@ -1,0 +1,17 @@
+﻿.tree-node {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+    .tree-node .title {
+        flex: 1 1 auto
+    }
+
+    .tree-node .action {
+        opacity: 0;
+    }
+
+    .tree-node:hover .action {
+        opacity: 1;
+    }

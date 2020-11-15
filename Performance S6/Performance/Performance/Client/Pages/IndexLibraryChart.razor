@@ -1,0 +1,17 @@
+﻿@inherits DrawerTemplate<Guid, object>
+
+<Spin Spinning="isLoading">
+
+    <Divider>历年各部门对比</Divider>
+    <AntDesign.Charts.GroupedColumn @ref="@columnRef" TItem="IndexLibraryChartDto" Config="@columnConfig" />
+    @if (columnDatas?.Count == 0)
+    {
+        <Result Title="无数据" />
+    }
+    <Divider>最近一年各部门占比</Divider>
+    <AntDesign.Charts.Donut @ref="@donutRef" TItem="IndexLibraryChartDto" Config="@donutConfig" />
+    @if (donutDatas?.Count == 0)
+    {
+        <Result Title="无数据" />
+    }
+</Spin>

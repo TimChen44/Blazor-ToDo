@@ -1,0 +1,38 @@
+﻿@page "/Achievement"
+
+<PageHeader Title="指标填写" Subtitle="录入各部门的各项指标数据">
+    <PageHeaderContent>
+        <Spin Spinning="isLoading">
+            <Form Layout="@FormLayout.Inline" Model="editQuery">
+                <FormItem Label="年份">
+                    <AutoComplete @bind-Value="@context.Year" Options="@yearOptions" Placeholder="请选择要维护的年份" AllowFilter="false" Disabled="@(datas != null)"></AutoComplete>
+                </FormItem>
+                <FormItem Label="公司/部门">
+                    <AutoComplete @bind-Value="@context.Organization" Options="@orgOptions" CompareWith="CompareWith" OnSelectionChange="OnIndexSelection" Placeholder="请选择要维护部门"  Disabled="@(datas != null)"></AutoComplete>
+                </FormItem>
+                <FormItem>
+                    <Button Type="@ButtonType.Primary" OnClick="OnLoad"  Disabled="@(datas != null)">载入</Button>
+                    <Button Type="@ButtonType.Primary" OnClick="OnSave"  Disabled="@(datas == null)">保存</Button>
+                    <Button Type="@ButtonType.Default" OnClick="OnCancel"  Disabled="@(datas == null)">取消</Button>
+                </FormItem>
+            </Form>
+        </Spin>
+    </PageHeaderContent>
+</PageHeader>
+
+<Table Loading="@isLoading" DataSource="@datas" HidePagination>
+    <AntDesign.Column Title="指标名称" @bind-Field="@context.IndexName" />
+    <AntDesign.Column Title="保障值" Field="@context.GuaranteedValue">
+        <AntDesign.InputNumber @bind-Value="@context.GuaranteedValue"></AntDesign.InputNumber>
+    </AntDesign.Column>
+    <AntDesign.Column Title="目标值" Field="@context.TargetValue">
+        <AntDesign.InputNumber @bind-Value="@context.TargetValue"></AntDesign.InputNumber>
+    </AntDesign.Column>
+    <AntDesign.Column Title="挑战值" Field="@context.ChallengeValue">
+        <AntDesign.InputNumber @bind-Value="@context.ChallengeValue"></AntDesign.InputNumber>
+    </AntDesign.Column>
+    <AntDesign.Column Title="实际值" Field="@context.ActualValue">
+        <AntDesign.InputNumber @bind-Value="@context.ActualValue"></AntDesign.InputNumber>
+    </AntDesign.Column>
+</Table>
+

@@ -1,0 +1,20 @@
+﻿@page "/"
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+<br />
+Host:@host
+
+@inject HttpClient Http
+@code{ 
+
+    string host;
+   protected override async  Task OnInitializedAsync()
+    {
+        host = await  Http.GetStringAsync($"api/Index/GetHost");
+        await  base.OnInitializedAsync();
+    }
+
+}
+

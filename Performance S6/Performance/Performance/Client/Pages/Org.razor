@@ -1,0 +1,91 @@
+﻿@page "/Org"
+
+
+<Row>
+    <AntDesign.Col Span="6">
+        <PageHeader Title="组织树">
+            <PageHeaderExtra>
+                <Button Type="@ButtonType.Primary" OnClick="OnAddRoot">添加组织</Button>
+            </PageHeaderExtra>
+        </PageHeader>
+
+        <Spin Spinning="isLoading">
+            <Tree DataSource="datas" BlockNode
+                  TitleExpression="x=>((OrgTreeDto)x.DataItem).Name"
+                  ChildrenExpression="x=>((OrgTreeDto)x.DataItem).Childs"
+                  OnNodeLoadDelayAsync="OnNodeLoadDelayAsync"
+                  OnClick="OnSelectNode"
+                  IsLeafExpression="x=>false ">
+                <TitleTemplate Context="node">
+                    <div class="tree-node">
+                        <div class="title">
+                            @node.Title
+                        </div>
+                        <div class="action">
+                            <Button Type="@ButtonType.Link" OnClick="x=>OnAddChild(node)">
+                                <Icon Type="plus"></Icon>
+                            </Button>
+                            <Button Type="@ButtonType.Link" OnClick="x=>OnEdit(node)">
+                                <Icon Type="edit"></Icon>
+                            </Button>
+                            <Button Type="@ButtonType.Link" Danger OnClick="x=>OnDelete(node)">
+                                <Icon Type="delete"></Icon>
+                            </Button>
+                        </div>
+                    </div>
+
+                </TitleTemplate>
+            </Tree>
+        </Spin>
+    </AntDesign.Col>
+
+    <AntDesign.Col Span="18">
+        <Spin Spinning="isCurrentLoading">
+            @if (currentOrgDto != null)
+            {
+                <PageHeader Title="@currentOrgDto.Name">
+                    <PageHeaderContent>
+                        <Descriptions Bordered Column="2">
+                            <DescriptionsItem Title="地址" Span="1">@currentOrgDto.Address</DescriptionsItem>
+                            <DescriptionsItem Title="电话" Span="1"><a>@currentOrgDto.Phone</a></DescriptionsItem>
+                            <DescriptionsItem Title="描述" Span="2">@currentOrgDto.Description</DescriptionsItem>
+                        </Descriptions>
+                    </PageHeaderContent>
+                    <PageHeaderExtra>
+                        <Button OnClick="x=>OnAddChild(currentTreeNode)">
+                            <Icon Type="plus"></Icon>
+                        </Button>
+                        <Button OnClick="x=>OnEdit(currentTreeNode)">
+                            <Icon Type="edit"></Icon>
+                        </Button>
+                        <Button Danger OnClick="x=>OnDelete(currentTreeNode)">
+                            <Icon Type="delete"></Icon>
+                        </Button>
+                    </PageHeaderExtra>
+                </PageHeader>
+                <Divider>部门需要采集的指标</Divider>
+
+                <AutoComplete @ref="auto" @bind-Value="@indexValue" Options="@indexOptions" CompareWith="CompareWith" OnSelectionChange="OnIndexSelection" Placeholder="请选择要添加的指标"></AutoComplete>
+
+                <Table DataSource="@linkIndexs">
+                    <AntDesign.Column @bind-Field="@context.Name" Sortable />
+                    <AntDesign.Column @bind-Field="@context.Scope" Sortable />
+                    <AntDesign.Column @bind-Field="@context.Type" Sortable />
+                    <AntDesign.Column @bind-Field="@context.Unit" />
+                    <AntDesign.Column @bind-Field="@context.Definition" />
+                    <AntDesign.Column @bind-Field="@context.Remark" />
+                    <AntDesign.Column TData="object" Style="width:75px">
+                        <Button OnClick="x=>OnDeleteLink(context)" Danger>删除</Button>
+                    </AntDesign.Column>
+                </Table>
+
+            }
+            else
+            {
+                <Result Style="margin-top:100px" Icon="smile-outline"
+                        Title="请从左边选择要操作的机构">
+                </Result>
+            }
+        </Spin>
+    </AntDesign.Col>
+</Row>

@@ -1,0 +1,41 @@
+﻿{
+   "ContextClassName": "PerformanceContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": null,
+   "ProjectRootNamespace": "Performance.Entity",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[Achievement]"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[IndexLibrary]"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[Organization]"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[OrganizationIndex]"
+      }
+   ],
+   "UseDatabaseNames": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": false,
+   "UseHandleBars": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseNodaTime": false,
+   "UseSpatial": false,
+   "UseStoredProcedures": false
+}
