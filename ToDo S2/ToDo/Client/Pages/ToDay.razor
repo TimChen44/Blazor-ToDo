@@ -194,7 +194,7 @@
 
         var drawerRef = await DrawerSvr.CreateAsync<TaskInfo, TaskDto, TaskDto>(options, task);
 
-        drawerRef.OnClose = async x => await InvokeAsync(StateHasChanged);
+        drawerRef.OnClosed = async x => await InvokeAsync(StateHasChanged);
     }
 
     public async Task OnDel(TaskDto task)
