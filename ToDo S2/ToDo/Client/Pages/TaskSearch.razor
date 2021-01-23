@@ -15,8 +15,8 @@
             }
         </AntDesign.Column>
         <AntDesign.Column @bind-Field="@context.Description" />
-        <AntDesign.Column @bind-Field="@context.PlanTime" Sortable/>
-        <AntDesign.Column @bind-Field="@context.Deadline" Sortable/>
+        <AntDesign.Column @bind-Field="@context.PlanTime" Sortable />
+        <AntDesign.Column @bind-Field="@context.Deadline" Sortable />
         <AntDesign.Column @bind-Field="@context.IsFinish">
             @if (context.IsFinish)
             {
@@ -29,11 +29,13 @@
 @code {
 
     private bool isLoading = false;
+    private string title;
+    List<TaskDto> datas = new List<TaskDto>();
 
     protected async override Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
         await OnSearch();
+        await base.OnInitializedAsync();
     }
 
     private async Task OnSearch()
@@ -42,9 +44,4 @@
         datas = await TaskSvr.LoadSearch(title);
         isLoading = false;
     }
-
-    private string title;
-
-    List<TaskDto> datas = new List<TaskDto>();
-
 }

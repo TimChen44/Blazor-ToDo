@@ -1,7 +1,5 @@
 ﻿@page "/today"
 @inject TaskServices TaskSvr
-@inject DrawerService DrawerSvr
-@inject ConfirmService ConfigSvr
 
 <PageHeader Title="@("我的一天")" Subtitle="@DateTime.Now.ToString("yyyy年MM月dd日")"></PageHeader>
 
@@ -15,61 +13,25 @@
             <div class="@(finishClass.ToString())" @onclick="x => OnFinish(item)">
                 <Icon Type="check" Theme="outline" />
             </div>
-            @*<div class="finish @(item.IsFinish?"":"unfinish")" @onclick="x => OnFinish(item)">
-                    <Icon Type="check" Theme="outline" />
-                </div>*@
             <div class="title" @onclick="x=>OnCardClick(item)">
                 <Text Strong> @item.Title</Text>
                 <br />
                 <Text Type="@TextElementType.Secondary">@item.Description</Text>
             </div>
-            <div class="del" @onclick="async e=>await OnDel(item)">
-                <Icon Type="rest" Theme="outline" />
-            </div>
             <div class="date">
                 @item.PlanTime.ToShortDateString()
                 <br />
-                @*@if (item.Deadline.HasValue)
-                    {
-                        @item.Deadline.Value.ToShortDateString()
-                    }*@
-                @*@item.Deadline?.ToShortDateString()*@
-
                 @{
                     int? days = (int?)item.Deadline?.Subtract(DateTime.Now.Date).TotalDays;
                 }
-                @*@if (days > 3)
-                    {
-                        <span style="color:#ccc">
-                            @item.Deadline?.ToShortDateString()
-                        </span>
-                    }
-                    else if (days > 0)
-                    {
-                        <span style="color:#ff6a00">
-                            @item.Deadline?.ToShortDateString()
-                        </span>
-                    }
-                    else
-                    {
-                        <span style="color:#ff0000">
-                            @item.Deadline?.ToShortDateString()
-                        </span>
-                    }*@
-
                 <span style="color:@(days switch { _ when days > 3 => "#ccc", _ when days > 0 => "#ffd800", _ => "#ff0000" })">
                     @item.Deadline?.ToShortDateString()
                 </span>
             </div>
+            <div class="del" @onclick="async e=>await OnDel(item)">
+                <Icon Type="rest" Theme="outline" />
+            </div>
             <div class="star" @onclick="x => OnStar(item)">
-                @*@if (item.IsImportant)
-                    {
-                         <Icon Type="star" Theme="fill" />
-                    }
-                    else
-                    {
-                         <Icon Type="star" Theme="outline"  />
-                    }*@
                 <Icon Type="star" Theme="@(item.IsImportant ? "fill" : "outline")" />
             </div>
         </div>
@@ -81,7 +43,62 @@
     <Input @bind-Value="@newTask.Title" OnkeyUp="OnInsert" />
 </div>
 
+@code{
+    private List<TaskDto> taskDtos = new List<TaskDto>();
 
+    protected async override Task OnInitializedAsync()
+    {
+        taskDtos = await TaskSvr.LoadToDay();
+
+        await base.OnInitializedAsync();
+    }
+
+
+    private void OnStar(TaskDto task)
+    {
+        task.IsImportant = !task.IsImportant;
+    }
+
+    [Inject] public DrawerService DrawerSrv { get; set; }
+
+    async void OnCardClick(TaskDto task)
+    {
+        var options = new DrawerOptions()
+        {
+            Title = task.Title,
+            Width = 450,
+        };
+        await DrawerSrv.CreateDialogAsync<TaskInfo, TaskDto, TaskDto>(options, task);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    TaskDto newTask = new TaskDto() { PlanTime = DateTime.Now.Date };
+
+    void OnInsert(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter")
+        {
+            taskDtos.Add(newTask);
+            newTask = new TaskDto() { PlanTime = DateTime.Now.Date };
+        }
+    }
+
+    [Inject] public ConfirmService ConfirmSrv { get; set; }
+
+    public async Task OnDel(TaskDto task)
+    {
+        if (await ConfirmSrv.Show($"是否删除任务 {task.Title}", "删除", ConfirmButtons.YesNo, ConfirmIcon.Info) == ConfirmResult.Yes)
+        {
+            taskDtos.Remove(task);
+        }
+    }
+
+    private void OnFinish(TaskDto task)
+    {
+        task.IsFinish = !task.IsFinish;
+    }
+
+}
 
 <style>
     .task-card {
@@ -149,59 +166,3 @@
         flex-direction: row
     }
 </style>
-
-
-@code {
-
-    private List<TaskDto> taskDtos = new List<TaskDto>();
-
-    protected async override Task OnInitializedAsync()
-    {
-        taskDtos = await TaskSvr.LoadToDay();
-
-        await base.OnInitializedAsync();
-    }
-
-    private void OnStar(TaskDto task)
-    {
-        task.IsImportant = !task.IsImportant;
-    }
-
-    private void OnFinish(TaskDto task)
-    {
-        task.IsFinish = !task.IsFinish;
-    }
-
-    TaskDto newTask = new TaskDto() { PlanTime = DateTime.Now.Date };
-
-
-    void OnInsert(KeyboardEventArgs e)
-    {
-        if (e.Code == "Enter")
-        {
-            taskDtos.Add(newTask);
-            newTask = new TaskDto() { PlanTime = DateTime.Now.Date };
-        }
-    }
-
-    async void OnCardClick(TaskDto task)
-    {
-        var options = new DrawerOptions()
-        {
-            Title = task.Title,
-            Width = 450,
-        };
-
-        var drawerRef = await DrawerSvr.CreateAsync<TaskInfo, TaskDto, TaskDto>(options, task);
-
-        drawerRef.OnClosed = async x => await InvokeAsync(StateHasChanged);
-    }
-
-    public async Task OnDel(TaskDto task)
-    {
-        if (await ConfigSvr.Show($"是否删除任务 {task.Title}", "删除", ConfirmButtons.YesNo, ConfirmIcon.Info) == ConfirmResult.Yes)
-        {
-            taskDtos.Remove(task);
-        }
-    }
-}

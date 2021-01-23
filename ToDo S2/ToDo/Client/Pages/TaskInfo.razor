@@ -1,6 +1,6 @@
 ﻿@inherits DrawerTemplate<TaskDto, TaskDto>
 
-<Form Model="this.Options" LabelCol="new ColLayoutParam() {Span = 8 }">
+<Form Model="this.Options" LabelColSpan="8">
     <FormItem Label="标题">
         <Input @bind-Value="context.Title" />
     </FormItem>

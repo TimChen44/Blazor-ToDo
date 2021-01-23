@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using ToDo.Shared;
 
@@ -21,6 +22,7 @@ namespace ToDo.Server.Controllers
         [HttpGet]
         public List<TaskDto> GetSearch(string title)
         {
+            Thread.Sleep(1000);
             return RandomData();
         }
 
