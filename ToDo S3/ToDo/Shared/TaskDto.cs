@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace ToDo.Shared
@@ -17,7 +16,6 @@ namespace ToDo.Shared
         /// 标题
         /// </summary>
         [DisplayName("标题")]
-        [Required(ErrorMessage = "标题必须填写")]
         public string Title { get; set; }
 
         /// <summary>

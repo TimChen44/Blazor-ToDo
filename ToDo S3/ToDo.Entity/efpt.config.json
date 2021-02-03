@@ -13,8 +13,8 @@
    "SelectedToBeGenerated": 0,
    "Tables": [
       {
-         "HasPrimaryKey": true,
-         "Name": "[dbo].[Task]"
+         "Name": "[dbo].[Task]",
+         "ObjectType": 0
       }
    ],
    "UseDatabaseNames": true,
@@ -24,6 +24,5 @@
    "UseInflector": false,
    "UseLegacyPluralizer": false,
    "UseNodaTime": false,
-   "UseSpatial": false,
-   "UseStoredProcedures": false
+   "UseSpatial": false
 }

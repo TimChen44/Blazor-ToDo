@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ToDo.Shared
 {
-   public  class SetFinishReq
+    public class SetFinishReq
     {
         public Guid TaskId { get; set; }
 

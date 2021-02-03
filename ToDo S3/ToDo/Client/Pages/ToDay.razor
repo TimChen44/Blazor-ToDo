@@ -1,6 +1,4 @@
 ﻿@page "/today"
-@inject DrawerService DrawerSvr
-@inject ConfirmService ConfigSvr
 
 <PageHeader Title="@("我的一天")" Subtitle="@DateTime.Now.ToString("yyyy年MM月dd日")"></PageHeader>
 <Spin Spinning="isLoading">
@@ -19,9 +17,6 @@
                     <br />
                     <Text Type="@TextElementType.Secondary">@item.Description</Text>
                 </div>
-                <div class="del" @onclick="async e=>await OnDel(item)">
-                    <Icon Type="rest" Theme="outline" />
-                </div>
                 <div class="date">
                     @item.PlanTime.ToShortDateString()
                     <br />
@@ -31,6 +26,9 @@
                     <span style="color:@(days switch { _ when days > 3 => "#ccc", _ when days > 0 => "#ffd800", _ => "#ff0000" })">
                         @item.Deadline?.ToShortDateString()
                     </span>
+                </div>
+                <div class="del" @onclick="async e=>await OnDel(item)">
+                    <Icon Type="rest" Theme="outline" />
                 </div>
                 <div class="star" @onclick="x => OnStar(item)">
                     <Icon Type="star" Theme="@(item.IsImportant ? "fill" : "outline")" />
@@ -46,7 +44,6 @@
         </div>
     </Spin>
 </Spin>
-
 
 <style>
     .task-card {
@@ -114,5 +111,3 @@
         flex-direction: row
     }
 </style>
-
-

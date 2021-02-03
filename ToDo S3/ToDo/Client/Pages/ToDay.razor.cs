@@ -13,15 +13,12 @@ namespace ToDo.Client.Pages
 {
     public partial class ToDay
     {
+        [Inject] public HttpClient Http { get; set; }
+
         // 1、	列出当天的所有代办工作
-
-        [Inject]
-        public HttpClient Http { get; set; }
-
-        bool isLoading = true;
-
         private List<TaskDto> taskDtos = new List<TaskDto>();
 
+        bool isLoading = true;
         protected async override Task OnInitializedAsync()
         {
             isLoading = true;
@@ -30,14 +27,10 @@ namespace ToDo.Client.Pages
             await base.OnInitializedAsync();
         }
 
-        TaskDto newTask = new TaskDto() { PlanTime = DateTime.Now.Date };
-
         //2、	添加代办
-
-        public MessageService MsgSrv { get; set; }
-
+        TaskDto newTask = new TaskDto() { PlanTime = DateTime.Now.Date };
+        [Inject] public MessageService MsgSrv { get; set; }
         bool isNewLoading = false;
-
         async void OnInsert(KeyboardEventArgs e)
         {
             if (e.Code == "Enter")
@@ -64,25 +57,18 @@ namespace ToDo.Client.Pages
             }
         }
 
-        //3、	编辑抽屉
+        //3、	编辑待办
+        [Inject] public DrawerService DrawerSrv { get; set; }
+
         async void OnCardClick(TaskDto task)
         {
-            var config = new DrawerOptions()
-            {
-                Title = task.Title,
-                Width = 450,
-            };
-
-            var drawerRef = await DrawerSvr.CreateAsync<TaskInfo, TaskDto, TaskDto>(config, task);
-
-            drawerRef.OnClosed = async result =>
-            {
-                if (result == null) return;
-                var index = taskDtos.FindIndex(x => x.TaskId == result.TaskId);
-                taskDtos[index] = result;
-                await InvokeAsync(StateHasChanged);
-            };
+            var result = await DrawerSrv.CreateDialogAsync<TaskInfo, TaskDto, TaskDto>(task, title: task.Title, width: 450);
+            if (result == null) return;
+            var index = taskDtos.FindIndex(x => x.TaskId == result.TaskId);
+            taskDtos[index] = result;
+            await InvokeAsync(StateHasChanged);
         }
+
 
         //4、	修改重要程度
         private async void OnStar(TaskDto task)
@@ -101,7 +87,7 @@ namespace ToDo.Client.Pages
             }
         }
 
-        //5、	修改完成与否
+        //5、	修改完成状态
         private async void OnFinish(TaskDto task)
         {
             var req = new SetFinishReq()
@@ -118,10 +104,13 @@ namespace ToDo.Client.Pages
             }
         }
 
+
         //6、	删除代办
+        [Inject] public ConfirmService ConfirmSrv { get; set; }
+
         public async Task OnDel(TaskDto task)
         {
-            if (await ConfigSvr.Show($"是否删除任务 {task.Title}", "删除", ConfirmButtons.YesNo, ConfirmIcon.Info) == ConfirmResult.Yes)
+            if (await ConfirmSrv.Show($"是否删除任务 {task.Title}", "删除", ConfirmButtons.YesNo, ConfirmIcon.Info) == ConfirmResult.Yes)
             {
                 taskDtos.Remove(task);
             }

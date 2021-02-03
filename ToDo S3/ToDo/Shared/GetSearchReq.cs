@@ -16,8 +16,14 @@ namespace ToDo.Shared
 
     public class SortFieldName
     {
-        public string FieldName { get; set; }
-        public string SortType { get; set; }
+        /// <summary>
+        /// 排序字段
+        /// </summary>
+        public string SortField { get; set; }
+        /// <summary>
+        /// 排序方向
+        /// </summary>
+        public string SortOrder { get; set; }
 
     }
 
