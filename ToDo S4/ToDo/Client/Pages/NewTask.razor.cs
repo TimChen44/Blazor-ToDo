@@ -14,29 +14,22 @@ namespace ToDo.Client.Pages
 {
     public partial class NewTask
     {
-        [Inject]
-        public MessageService MsgSrv { get; set; }
+        [Inject] public MessageService MsgSrv { get; set; }
+        [Inject] public HttpClient Http { get; set; }
 
-        [Inject]
-        public HttpClient Http { get; set; }
-
+        [Parameter] public EventCallback<TaskDto> OnInserted { get; set; }
+        [Parameter] public Func<TaskDto> NewTaskFunc { get; set; }
+        [Parameter] public RenderFragment<TaskDto> ChildContent { get; set; }
 
         //新的任务
         TaskDto newTask { get; set; }
-
-        [Parameter]
-        public EventCallback<TaskDto> OnInserted { get; set; }
-
-
         private bool isNewLoading { get; set; }
 
         protected override void OnInitialized()
         {
-            newTask= NewTaskFunc?.Invoke();
+            newTask = NewTaskFunc?.Invoke();
             base.OnInitialized();
-
         }
-
 
         async void OnInsertKey(KeyboardEventArgs e)
         {
@@ -65,12 +58,5 @@ namespace ToDo.Client.Pages
                 StateHasChanged();
             }
         }
-
-
-        [Parameter]
-        public Func<TaskDto> NewTaskFunc { get; set; }
-
-        [Parameter]
-        public RenderFragment<TaskDto> ChildContent { get; set; }
     }
 }

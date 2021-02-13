@@ -3,7 +3,7 @@
 <Spin Spinning="isLoading">
     @if (taskDto != null)
     {
-        <Form OnFinish="OnSave" Model="@taskDto" LabelCol="new ColLayoutParam() {Span = 8 }">
+        <Form OnFinish="OnSave" Model="taskDto" LabelColSpan="8">
             <FormItem Label="标题">
                 <Input @bind-Value="context.Title" />
             </FormItem>
@@ -22,6 +22,7 @@
             <FormItem Label="完成">
                 <Switch @bind-Value="context.IsFinish" />
             </FormItem>
+
             <div>
                 <Button HtmlType="submit">保存</Button>
                 <Button OnClick="OnCancel">取消</Button>

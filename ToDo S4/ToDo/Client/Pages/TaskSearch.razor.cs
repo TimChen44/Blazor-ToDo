@@ -1,6 +1,4 @@
-﻿using AntDesign;
-using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
+﻿using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +11,8 @@ namespace ToDo.Client.Pages
 {
     public partial class TaskSearch
     {
-        //7、	查询代办
-        [Inject]
-        public HttpClient Http { get; set; }
+        //7、	查询待办
+        [Inject] public HttpClient Http { get; set; }
 
         private bool isLoading = false;
 
@@ -27,31 +24,20 @@ namespace ToDo.Client.Pages
 
         private async Task OnSearch()
         {
-            await OnQuery(1, 10);
+            await OnQuery(1, 10, new List<SortFieldName>());
         }
 
         private async Task OnChange(AntDesign.TableModels.QueryModel<TaskDto> queryModel)
         {
-            //await OnQuery(queryModel.PageIndex, queryModel.PageSize);
-
-            await OnQuery2(
+            await OnQuery(
                 queryModel.PageIndex,
                 queryModel.PageSize,
                 queryModel.SortModel.Where(x => string.IsNullOrEmpty(x.SortType.Name) == false).OrderBy(x => x.Priority)
-                .Select(x => new SortFieldName() { FieldName = x.FieldName, SortType = x.SortType.Name }).ToList()
+                .Select(x => new SortFieldName() { SortField = x.FieldName, SortOrder = x.SortType.Name }).ToList()
                 );
         }
 
-        private async Task OnQuery(int pageIndex, int pageSize)
-        {
-            isLoading = true;
-            var result = await Http.GetFromJsonAsync<GetSearchRsp>($"api/Task/GetSearch?title={queryTitle}&pageIndex={pageIndex}&pageSize={pageSize}");
-            datas = result.Data;
-            total = result.Total;
-            isLoading = false;
-        }
-
-        private async Task OnQuery2(int pageIndex, int pageSize, List<SortFieldName> sort)
+        private async Task OnQuery(int pageIndex, int pageSize, List<SortFieldName> sort)
         {
             isLoading = true;
             var req = new GetSearchReq()
@@ -61,7 +47,7 @@ namespace ToDo.Client.Pages
                 PageSize = pageSize,
                 Sorts = sort,
             };
-            var httpRsp = await Http.PostAsJsonAsync<GetSearchReq>($"api/Task/GetSearch2", req);
+            var httpRsp = await Http.PostAsJsonAsync<GetSearchReq>($"api/Task/GetSearch", req);
             var result = await httpRsp.Content.ReadFromJsonAsync<GetSearchRsp>();
             datas = result.Data;
             total = result.Total;
@@ -69,27 +55,12 @@ namespace ToDo.Client.Pages
             isLoading = false;
         }
 
-        //8、	查看详细抽屉
-        [Inject]
-        public TaskService TaskSrv { get; set; }
+        //8、	查看详细服务
+        [Inject] public TaskDetailServices TaskSrv { get; set; }
 
         private async Task OnDetail(TaskDto taskDto)
         {
-            var result = await TaskSrv.EditTask(taskDto);
-            if (result != null)
-                TaskSrv.ReplaceItem(datas, result);
-        }
-
-        [Inject]
-        public IJSRuntime JS { get; set; }
-
-        [Inject]
-        public MessageService MsgSrv { get; set; }
-
-        public async Task JsDemo(TaskDto taskDto)
-        {
-            var result = await JS.InvokeAsync<string>("jsDemo", taskDto.Title);
-            await MsgSrv.Success(result);
+            await TaskSrv.EditTask(taskDto, datas);
         }
     }
 }

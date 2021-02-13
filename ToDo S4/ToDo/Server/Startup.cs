@@ -19,6 +19,7 @@ namespace ToDo.Server
         /// </summary>
         public static readonly ILoggerFactory loggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;

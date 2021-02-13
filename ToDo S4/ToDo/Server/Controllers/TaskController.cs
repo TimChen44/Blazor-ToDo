@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using ToDo.Entity;
 using ToDo.Shared;
+using System.Linq.Dynamic.Core;
 
 namespace ToDo.Server.Controllers
 {
@@ -24,15 +26,6 @@ namespace ToDo.Server.Controllers
         public List<TaskDto> GetToDayTask()
         {
             var result = Context.Task.Where(x => x.PlanTime == DateTime.Now.Date);
-            return QueryToDto(result).ToList();
-        }
-
-
-        //8、    列出重要的未完成工作
-        [HttpGet]
-        public List<TaskDto> GetStarTask()
-        {
-            var result = Context.Task.Where(x => x.IsImportant == true && x.IsFinish == false);
             return QueryToDto(result).ToList();
         }
 
@@ -76,7 +69,8 @@ namespace ToDo.Server.Controllers
             return entity.TaskId;
         }
 
-        //3、	编辑抽屉
+        //3、	编辑待办
+        //获得待办信息
         [HttpGet]
         public TaskDto GetTaskDto(Guid taskId)
         {
@@ -93,7 +87,7 @@ namespace ToDo.Server.Controllers
             Context.SaveChanges();
         }
 
-        //5、	修改完成与否
+        //5、	修改完成状态
         [HttpPost]
         public void SetFinish(SetFinishReq req)
         {
@@ -111,38 +105,19 @@ namespace ToDo.Server.Controllers
         }
 
         //7、	查询代办
-        [HttpGet]
-        public GetSearchRsp GetSearch(string title, int pageIndex, int pageSize)
-        {
-            if (pageIndex == 0) pageIndex = 1;
-            var query = Context.Task.Where(x => x.Title.Contains(title ?? ""));
-
-            var result = new GetSearchRsp()
-            {
-                Data = QueryToDto(query.Skip(--pageIndex * pageSize).Take(pageSize)).ToList(),
-                Total = query.Count(),
-            };
-
-            return result;
-        }
-
         [HttpPost]
-        public GetSearchRsp GetSearch2(GetSearchReq req)
+        public GetSearchRsp GetSearch(GetSearchReq req)
         {
             if (req.PageIndex == 0) req.PageIndex = 1;
-            var query = Context.Task.Where(x => x.Title.Contains(req.QueryTitle ?? "")).OrderBy(x => true);
+            var query = Context.Task.Where(x => x.Title.Contains(req.QueryTitle ?? ""));
 
             foreach (var sort in req.Sorts)
             {
-                switch (sort.FieldName)
-                {
-                    case "Title":
-                        query = sort.SortType == "ascend" ? query.ThenBy(x => x.Title) : query.ThenByDescending(x => x.Title);
-                        break;
-                    case "PlanTime":
-                        query = sort.SortType == "ascend" ? query.ThenBy(x => x.PlanTime) : query.ThenByDescending(x => x.PlanTime);
-                        break;
-                }
+                if (sort.SortOrder == "descend")
+                    query = query.OrderBy(sort.SortField + " DESC");
+                else
+                    query = query.OrderBy(sort.SortField);
+
             }
 
             var result = new GetSearchRsp()
@@ -154,5 +129,12 @@ namespace ToDo.Server.Controllers
             return result;
         }
 
+        //8、    列出重要的未完成工作
+        [HttpGet]
+        public List<TaskDto> GetStarTask()
+        {
+            var result = Context.Task.Where(x => x.IsImportant == true && x.IsFinish == false);
+            return QueryToDto(result).ToList();
+        }
     }
 }

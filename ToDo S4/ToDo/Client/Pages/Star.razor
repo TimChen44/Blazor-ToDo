@@ -1,6 +1,4 @@
 ﻿@page "/star"
-@inject DrawerService DrawerSvr
-@inject ConfirmService ConfigSvr
 
 <PageHeader Title="@("重要的任务")" Subtitle="@($"数量：{taskDtos?.Count}")"></PageHeader>
 
@@ -10,9 +8,7 @@
         <TaskItem  Item="item" OnFinish="OnFinish" OnCard="OnCardClick" OnDel="OnDel" OnStar="OnStar" ShowStar="false">
         </TaskItem>
     }
-
     <NewTask OnInserted="OnInsert" NewTaskFunc="() => new TaskDto() { PlanTime = DateTime.Now.Date, IsImportant = true  }"></NewTask>
-
 </Spin>
 
 <style>
