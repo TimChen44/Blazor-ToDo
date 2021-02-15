@@ -1,0 +1,18 @@
+﻿<div style="margin:100px">
+    <Spin Spinning="isLoading">
+        @if (model != null)
+        {
+            <Form OnFinish="OnLogin" Model="@model" LabelCol="new ColLayoutParam() {Span = 6 }">
+                <FormItem Label="用户名">
+                    <Input @bind-Value="context.UserName" />
+                </FormItem>
+                <FormItem Label="密码">
+                    <Input @bind-Value="context.Password" Type="password" />
+                </FormItem>
+                <FormItem  WrapperColOffset="6">
+                    <Button Type="@ButtonType.Primary" HtmlType="submit">登录</Button>
+                </FormItem>
+            </Form>
+        }
+    </Spin>
+</div>

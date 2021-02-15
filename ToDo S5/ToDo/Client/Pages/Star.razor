@@ -1,0 +1,21 @@
+﻿@page "/star"
+
+<PageHeader Title="@("重要的任务")" Subtitle="@($"数量：{taskDtos?.Count}")"></PageHeader>
+
+<Spin Spinning="@isLoading">
+    @foreach (var item in taskDtos)
+    {
+        <TaskItem  Item="item" OnFinish="OnFinish" OnCard="OnCardClick" OnDel="OnDel" OnStar="OnStar" ShowStar="false">
+        </TaskItem>
+    }
+    <NewTask OnInserted="OnInsert" NewTaskFunc="() => new TaskDto() { PlanTime = DateTime.Now.Date, IsImportant = true  }"></NewTask>
+</Spin>
+
+<style>
+    .task-input {
+        display: flex;
+        flex-direction: row
+    }
+</style>
+
+
