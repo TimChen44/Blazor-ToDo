@@ -1,0 +1,35 @@
+﻿@page "/today"
+
+<PageHeader Title="@("我的一天")" Subtitle="@DateTime.Now.ToString("yyyy年MM月dd日")"></PageHeader>
+
+<Spin Spinning="@isLoading">
+    @foreach (var item in taskDtos)
+    {
+        <TaskItem @key="item.TaskId" Item="item" OnFinish="OnFinish" OnCard="OnCardClick" OnDel="OnDel" OnStar="OnStar">
+            <TitleTemplate>
+                <AntDesign.Text Strong Style="@(item.IsFinish?"text-decoration: line-through;color:silver;":"")"> @item.Title</AntDesign.Text>
+                <br />
+                <AntDesign.Text Type="@TextElementType.Secondary">
+                    @item.Description
+                </AntDesign.Text>
+            </TitleTemplate>
+        </TaskItem>
+    }
+
+    <NewTask OnInserted="OnInsert" NewTaskFunc="()=>  new TaskDto() {PlanTime=DateTime.Now.Date }">
+        <ChildContent Context="newTask">
+            <RadioGroup @bind-Value="newTask.IsImportant">
+                <Radio RadioButton Value="true">重要</Radio>
+                <Radio RadioButton Value="false">普通</Radio>
+            </RadioGroup>
+        </ChildContent>
+    </NewTask>
+
+</Spin>
+
+<style>
+    .task-input {
+        display: flex;
+        flex-direction: row
+    }
+</style>

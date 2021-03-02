@@ -1,0 +1,5 @@
+﻿@page "/statistics"
+
+<Spin Spinning="isLoading">
+    <AntDesign.Charts.StackedColumn @ref="@amountChart" Config="amountConfig" TItem="ChartAmountDto" />
+</Spin>

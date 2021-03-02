@@ -1,0 +1,18 @@
+﻿
+<div style="border:1px solid black;margin:10px">
+    <h3>Grandson</h3>
+    <div>father:<Input @bind-Value="@father.value" /></div>
+    <div>son:@son.value</div>
+    <dvi>me:<Input @bind-Value="@value" /></dvi>
+
+</div>
+@code {
+
+    public string value { get; set; }
+
+    [CascadingParameter]
+    public Father father { get; set; }
+
+    [CascadingParameter]
+    public Son son { get; set; }
+}

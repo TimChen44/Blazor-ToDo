@@ -1,0 +1,32 @@
+﻿@inherits DrawerTemplate<TaskDto, TaskDto>
+
+<Spin Spinning="isLoading">
+    @if (taskDto != null)
+    {
+        <Form OnFinish="OnSave" Model="taskDto" LabelColSpan="8">
+            <FormItem Label="标题">
+                <Input @bind-Value="context.Title" />
+            </FormItem>
+            <FormItem Label="计划日期">
+                <DatePicker @bind-Value="context.PlanTime" Picker="@DatePickerType.Date" />
+            </FormItem>
+            <FormItem Label="截至日期">
+                <DatePicker @bind-Value="context.Deadline" Picker="@DatePickerType.Date" />
+            </FormItem>
+            <FormItem Label="描述">
+                <TextArea @bind-Value="context.Description" MinRows="4" />
+            </FormItem>
+            <FormItem Label="重要">
+                <Switch @bind-Value="context.IsImportant" />
+            </FormItem>
+            <FormItem Label="完成">
+                <Switch @bind-Value="context.IsFinish" />
+            </FormItem>
+
+            <div>
+                <Button HtmlType="submit">保存</Button>
+                <Button OnClick="OnCancel">取消</Button>
+            </div>
+        </Form>
+    }
+</Spin>

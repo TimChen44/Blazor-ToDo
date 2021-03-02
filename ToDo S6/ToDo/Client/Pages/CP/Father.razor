@@ -1,0 +1,18 @@
+﻿
+<div style="border:1px solid black;margin:10px">
+    <h3>Father <Button OnClick="OnRef">刷新</Button></h3>
+    <dvi>me:<Input @bind-Value="@value" /></dvi>
+    <CascadingValue Value="this">
+        <Son></Son>
+    </CascadingValue>
+
+</div>
+@code {
+
+    public string value { get; set; }
+
+    public void OnRef()
+    {
+        StateHasChanged();
+    }
+}
