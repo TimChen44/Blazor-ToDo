@@ -1,0 +1,27 @@
+﻿@page "/search"
+
+<PageHeader Title="@("全部待办事项")" Subtitle="@($"数量：{total}")"></PageHeader>
+
+<Search @bind-Value="queryTitle" OnSearch="OnSearch"></Search>
+
+<Table Loading="@isLoading" DataSource="@datas" PageSize="10" Total="@total" OnChange="OnChange" TItem="TaskDto">
+    <AntDesign.Column @bind-Field="@context.Title" Sortable>
+        @context.Title
+        @if (context.IsImportant)
+        {
+            <Tag Color="orange">重要</Tag>
+        }
+    </AntDesign.Column>
+    <AntDesign.Column @bind-Field="@context.Description" />
+    <AntDesign.Column @bind-Field="@context.PlanTime" Sortable />
+    <AntDesign.Column @bind-Field="@context.Deadline" />
+    <AntDesign.Column @bind-Field="@context.IsFinish">
+        @if (context.IsFinish)
+        {
+            <Icon Type="check" Theme="outline" />
+        }
+    </AntDesign.Column>
+    <AntDesign.Column TData="object">
+        <Button OnClick="x=>OnDetail(context)">详情</Button>
+    </AntDesign.Column>
+</Table>

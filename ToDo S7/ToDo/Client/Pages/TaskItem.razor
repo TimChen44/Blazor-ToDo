@@ -1,0 +1,120 @@
+﻿<Card Bordered="true" Size="small" Class="task-card">
+    <div class="task-card-item">
+        @{
+            var finishClass = new ClassMapper().Add("finish").If("unfinish", () => Item.IsFinish == false);
+        }
+        <div class="@(finishClass.ToString())" @onclick="OnFinishClick">
+            <Icon Type="check" Theme="outline" />
+        </div>
+        <div class="title" @onclick="OnCardClick">
+
+            @if (TitleTemplate != null)
+            {
+                @TitleTemplate
+            }
+            else
+            {
+                <AntDesign.Text Strong> @Item.Title</AntDesign.Text>
+                <br />
+                <AntDesign.Text Type="@TextElementType.Secondary">
+                    @Item.Description
+                </AntDesign.Text>
+            }
+        </div>
+        <div class="del" @onclick="OnDelClick">
+            <Icon Type="rest" Theme="outline" />
+        </div>
+        <div class="date">
+            @Item.PlanTime.ToShortDateString()
+            <br />
+            @{
+                int? days = (int?)Item.Deadline?.Subtract(DateTime.Now.Date).TotalDays;
+            }
+            <span style="color:@(days switch { _ when days > 3 => "#ccc", _ when days > 0 => "#ffd800", _ => "#ff0000" })">
+                @Item.Deadline?.ToShortDateString()
+            </span>
+        </div>
+        <div class="chart">
+            @{
+                double progress = 0;
+                if (Item.IsFinish == false && Item.Deadline.HasValue)
+                    progress = (double)Item.Deadline.Value.Subtract(DateTime.Now).TotalHours / (double)Item.Deadline.Value.Subtract(Item.PlanTime).TotalHours;
+            }
+
+            <AntDesign.Charts.RingProgress Data="progress" Config="progressConfig"></AntDesign.Charts.RingProgress>
+        </div>
+        @if (ShowStar)
+        {
+            <div class="star" @onclick="OnStarClick">
+                <Icon Type="star" Theme="@(Item.IsImportant ? "fill" : "outline")" />
+            </div>
+        }
+    </div>
+</Card>
+
+<style>
+    .task-card {
+        margin-bottom: 3px;
+    }
+
+        .task-card:hover {
+            background-color: #eee;
+            margin-bottom: 3px;
+        }
+
+            .task-card:hover .del {
+                color: #ff0000
+            }
+
+    .task-card-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+        .task-card-item .finish {
+            text-align: center;
+            flex: 0 0 32px;
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .task-card-item .del {
+            text-align: center;
+            flex: 0 0 32px;
+            font-size: 24px;
+            margin-right: 10px;
+            color: rgba(255, 0, 0, 0.00);
+            cursor: pointer;
+        }
+
+
+        .task-card-item .star {
+            text-align: center;
+            flex: 0 0 32px;
+            font-size: 24px;
+            margin-left: 10px;
+        }
+
+        .task-card-item .title {
+            flex: 1 1 auto;
+            cursor: pointer;
+        }
+
+        .task-card-item .date {
+            flex: 0 0 auto
+        }
+
+        .task-card-item .unfinish {
+            color: white;
+        }
+
+            .task-card-item .unfinish:hover {
+                color: #808080;
+            }
+
+
+        .task-card-item .chart {
+            margin-left: 8px;
+        }
+</style>
